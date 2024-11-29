@@ -1,0 +1,8 @@
+textarea {
+  width: 100%;
+  field-sizing: content;
+}
+
+.error-message {
+  color: red;
+}
