@@ -15,24 +15,17 @@ app.post('/translate', async (c) => {
 
   const messages = [
     {
-      role: "system",
-      content: `
-  If the following text is in Japanese, translate it into English phrases without additional comments. If it is already in English, reply with the text exactly as it is.
-  `,
+      role: 'system',
+      content: `Translate the following japanese into English phrases without additional comments.`,
     },
-    { role: "user", content: prompt },
+    { role: 'user', content: prompt },
   ]
 
-  const stream = await c.env.AI.run("@cf/meta/llama-3.2-3b-instruct", {
+  const answer = await c.env.AI.run('@cf/meta/llama-3.2-3b-instruct', {
     messages,
-    stream: true,
   })
 
-  return new Response(stream, {
-    headers: {
-      'Content-Type': 'text/event-stream',
-    }
-  })
+  return c.text(answer.response)
 })
 
 export default app
