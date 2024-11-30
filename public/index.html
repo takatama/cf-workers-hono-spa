@@ -8,9 +8,12 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@exampledev/new.css@1.1.3/new.min.css" />
   <link rel="stylesheet" href="style.css" />
   <script src="script.js" defer></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onLoadTurnstile" defer></script>
+  <script src="turnstile.js" defer></script>
 </head>
 
 <body>
+  <div id="turnstile-widget"></div>
   <h3>日本語から英語に翻訳</h3>
   <textarea id="prompt" placeholder="日本語を入力してください"></textarea>
   <button id="translate-btn">
