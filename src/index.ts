@@ -1,23 +1,16 @@
 import { Hono } from 'hono'
 import translate from './translate'
 import turnstile from './turnstile'
-import { jwt } from 'hono/jwt'
+import { sessionMiddleware } from './session'
+import { csrfMiddleware, secFetchSiteMiddleware } from './csrf'
 
-type Bindings = {
-  JWT_SECRET: string
-}
+const app = new Hono()
 
-const app = new Hono<{ Bindings: Bindings }>()
+app.use('*', csrfMiddleware())
+app.use('*', secFetchSiteMiddleware())
+app.use('/api/*', sessionMiddleware())
 
-app.use('/api/*', (c, next) => {
-  const jwtMiddleware = jwt({
-    secret: c.env.JWT_SECRET,
-    cookie: 'session',
-  })
-  return jwtMiddleware(c, next)
-})
-
-app.route('/api/translate', translate)
 app.route('/auth', turnstile)
+app.route('/api/translate', translate)
 
 export default app

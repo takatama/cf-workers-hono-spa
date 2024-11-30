@@ -21,6 +21,7 @@ async function onTurnstileSuccess(token) {
   if (response.ok) {
     translateBtn.disabled = false;
   } else {
+    translateBtn.disabled = true;
     alert('認証に失敗しました。再度お試しください。');
   }
 }
