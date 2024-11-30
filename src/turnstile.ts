@@ -1,7 +1,9 @@
 import { Hono } from 'hono'
+import { createSessionCookie } from './session'
 
 type Bindings = {
-  TURNSTILE_SECRET_KEY: string
+  TURNSTILE_SECRET_KEY: string,
+  JWT_SECRET: string
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -11,7 +13,6 @@ app.post('/', async (c) => {
   const formData = await c.req.formData()
   const token = formData.get('cf-turnstile-response')
   const ip = c.req.header('CF-Connecting-IP')
-  console.log(token, ip)
   if (!token || typeof token !== 'string') {
     return c.text('Invalid input', 400)
   }
@@ -19,6 +20,8 @@ app.post('/', async (c) => {
   if (!isValid) {
     return c.text('Unauthenticated', 401)
   }
+
+  await createSessionCookie(c, { user: 'authenticated' }, c.env.JWT_SECRET)
   return c.text('Authenticated')
 })
 
@@ -35,8 +38,11 @@ export async function verifyTurnstileToken(secretKey: string, token: string, ip:
     method: 'POST',
     body: formData,
   })
-  const data: ResponseJson = await response.json();
-  return data.success;
+  const data: ResponseJson = await response.json()
+  if (!data.success) {
+    console.error(data)
+  }
+  return data.success
 }
 
 export default app

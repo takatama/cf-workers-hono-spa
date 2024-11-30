@@ -20,18 +20,17 @@ async function onTurnstileSuccess(token) {
 
   if (response.ok) {
     translateBtn.disabled = false;
-    genImageBtn.disabled = false;
   } else {
     alert('認証に失敗しました。再度お試しください。');
   }
 }
 
 function onTurnstileError() {
+  translateBtn.disabled = true;
   alert('Turnstileエラーが発生しました。再度お試しください。');
 }
 
 function onTurnstileExpired() {
   translateBtn.disabled = true;
-  genImageBtn.disabled = true;
   turnstile.reset();
 }
