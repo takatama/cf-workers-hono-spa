@@ -11,12 +11,13 @@ async function translateText() {
   try {
     const formData = new FormData();
     formData.set("prompt", promptInput.value);
-    const response = await fetch(`/translate`, {
+    const response = await fetch(`/api/translate`, {
       method: "POST",
       body: formData,
     });
 
-    if (!response.ok) throw new Error(`エラー ${response.status} ${response.statusText}`);
+    // if (!response.ok) throw new Error(`エラー ${response.status} ${response.statusText}`);
+    verifyResponse(response)
     translatedPrompt.value = await response.text();
   } catch (error) {
     console.error("エラー: ", error);
