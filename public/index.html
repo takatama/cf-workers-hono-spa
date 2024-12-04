@@ -16,14 +16,16 @@
 <body>
   <div id="turnstile-widget"></div>
   <h3>日本語から英語に翻訳</h3>
+
+  <section id="history-section">
+    <div id="history-list"></div>
+  </section>
+
   <textarea id="prompt" placeholder="日本語を入力してください"></textarea>
-  <button id="translate-btn">
+  <button id="translate-btn" disabled>
     英語に翻訳
   </button>
-  
-  <h3>翻訳結果</h3>
   <p id="translate-error-message" class="error-message"></p>
-  <textarea id="translated-prompt" placeholder="ここに英語の翻訳結果が表示されます"></textarea>
 </body>
 
 </html>
