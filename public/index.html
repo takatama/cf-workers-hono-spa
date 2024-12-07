@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Workers AI ハンズオン</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@exampledev/new.css@1.1.3/new.min.css" />
+  <link rel="stylesheet" href="pico.blue.min.css" />
   <link rel="stylesheet" href="style.css" />
   <script src="script.js" defer></script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onLoadTurnstile" defer></script>
@@ -14,18 +14,18 @@
 </head>
 
 <body>
-  <div id="turnstile-widget"></div>
-  <h3>日本語から英語に翻訳</h3>
-
-  <section id="history-section">
-    <div id="history-list"></div>
-  </section>
-
-  <textarea id="prompt" placeholder="日本語を入力してください"></textarea>
-  <button id="translate-btn" disabled>
-    英語に翻訳
-  </button>
-  <p id="translate-error-message" class="error-message"></p>
+  <main class="container">
+    <div id="turnstile-widget"></div>
+    <h2>日本語から英語に翻訳</h2>
+    <section aria-labelledby="翻訳履歴">
+      <ul id="history-list"></ul>
+    </section>
+    <form id="translate-form">
+      <textarea id="prompt" name="prompt" placeholder="日本語を入力してください" required></textarea>
+      <button type="submit" id="translate-btn" disabled>英語に翻訳</button>
+    </form>
+    <p id="translate-error-message" class="error-message" style="display: none;"></p>
+  </main>
 </body>
 
 </html>

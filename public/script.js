@@ -1,61 +1,63 @@
-const promptInput = document.getElementById("prompt");
-const translateBtn = document.getElementById("translate-btn");
-const errorMessage = document.getElementById("translate-error-message");
-const translatedPrompt = document.getElementById("translated-prompt");
-const historyList = document.getElementById("history-list");
+document.addEventListener("DOMContentLoaded", () => {
+  const promptInput = document.getElementById("prompt");
+  const translateBtn = document.getElementById("translate-btn");
+  const errorMessage = document.getElementById("translate-error-message");
+  const historyList = document.getElementById("history-list");
+  const translateForm = document.getElementById("translate-form");
 
-// 翻訳履歴の追加
-function addToHistory(inputText, translatedText) {
-  const historyItem = document.createElement("div");
-  historyItem.classList.add("history-item");
+  // 入力欄の変更を監視してボタンの有効化を制御
+  promptInput.addEventListener("input", () => {
+    translateBtn.disabled = promptInput.value.trim() === "";
+  });
 
-  const inputPara = document.createElement("p");
-  inputPara.innerHTML = inputText;
-  historyItem.appendChild(inputPara);
-
-  const translatedPara = document.createElement("p");
-  translatedPara.innerHTML = translatedText;
-  historyItem.appendChild(translatedPara);
-
-  historyList.style.display = "block";
-  historyList.appendChild(historyItem);
-
-  // 履歴リストをスクロールダウン
-  historyList.scrollTop = historyList.scrollHeight;
-}
-
-// 翻訳処理
-async function translateText() {
-  translateBtn.disabled = true;
-  errorMessage.style.display = "none";
-
-  try {
-    const formData = new FormData();
-    formData.set("prompt", promptInput.value);
-    const response = await fetch(`/api/translate`, {
-      method: "POST",
-      body: formData,
-    });
-
-    verifyResponse(response);
-    const translatedText = await response.text();
-    addToHistory(promptInput.value, translatedText);
-    promptInput.value = "";
-  } catch (error) {
-    console.error("エラー: ", error);
-    errorMessage.textContent = "翻訳に失敗しました。もう一度試してください。";
-    errorMessage.style.display = "block";
-  } finally {
-    translateBtn.disabled = false;
+  // 翻訳履歴の追加
+  function addToHistory(inputText, translatedText) {
+    const historyItem = document.createElement("li");
+    historyItem.innerHTML = `<strong>日本語:</strong> ${inputText}<br><strong>英語:</strong> ${translatedText}`;
+    historyList.appendChild(historyItem);
+    historyList.scrollTop = historyList.scrollHeight; // 履歴リストをスクロールダウン
   }
-}
 
-// イベントリスナーの登録
-translateBtn.addEventListener("click", translateText);
-promptInput.addEventListener("keydown", (event) => {
-  if (!event.isComposing && event.key === "Enter") {
+  // 翻訳処理
+  async function translateText(event) {
     event.preventDefault();
-    translateBtn.click();
+    translateBtn.disabled = true;
+    errorMessage.style.display = "none";
+
+    try {
+      const formData = new FormData(translateForm);
+      const response = await fetch(`/api/translate`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const translatedText = await response.text();
+      addToHistory(promptInput.value, translatedText);
+      promptInput.value = "";
+    } catch (error) {
+      console.error("エラー: ", error);
+      errorMessage.textContent = "翻訳に失敗しました。もう一度試してください。";
+      errorMessage.style.display = "block";
+    }
   }
+
+  // フォームの送信イベントに翻訳処理をバインド
+  translateForm.addEventListener("submit", translateText);
+
+  // Enterキーでの送信を制御
+  promptInput.addEventListener("keydown", (event) => {
+    if (!event.isComposing && event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      if (!translateBtn.disabled) {
+        translateForm.requestSubmit();
+      }
+    }
+  });
+
+  // ページ読み込み時に入力欄にフォーカス
+  promptInput.focus();
 });
-promptInput.focus();
