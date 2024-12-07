@@ -1,6 +1,9 @@
 const SITE_KEY = '0x4AAAAAAA1K1jrmgz4eYx4s';
 
+const translateBtn = document.getElementById('translate-btn');
+
 function onLoadTurnstile() {
+  translateBtn.disabled = true;
   turnstile.render('#turnstile-widget', {
     sitekey: SITE_KEY,
     callback: onTurnstileSuccess,

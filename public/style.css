@@ -1,8 +1,16 @@
-textarea {
-  width: 100%;
-  field-sizing: content;
-}
-
 .error-message {
   color: red;
+  display: none;
+}
+
+#history-list {
+  max-height: 200px;
+  overflow-y: auto;
+  padding-left: 1rem;
+  list-style-type: disc;
+}
+
+#turnstile-widget {
+  margin: 1rem 0;
+  text-align: center;
 }
