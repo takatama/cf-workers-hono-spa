@@ -10,10 +10,19 @@ document.addEventListener("DOMContentLoaded", () => {
     translateBtn.disabled = promptInput.value.trim() === "";
   });
 
+  function escapeHTML(str) {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+  
   // 翻訳履歴の追加
   function addToHistory(inputText, translatedText) {
     const historyItem = document.createElement("li");
-    historyItem.innerHTML = `<strong>日本語:</strong> ${inputText}<br><strong>英語:</strong> ${translatedText}`;
+    historyItem.innerHTML = `<strong>日本語:</strong> ${escapeHTML(inputText)}<br><strong>英語:</strong> ${escapeHTML(translatedText)}`;
     historyList.appendChild(historyItem);
     historyList.scrollTop = historyList.scrollHeight; // 履歴リストをスクロールダウン
   }
