@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("エラー: ", error);
       errorMessage.textContent = "翻訳に失敗しました。もう一度試してください。";
       errorMessage.style.display = "block";
+      translateBtn.disabled = false;
     }
   }
 
